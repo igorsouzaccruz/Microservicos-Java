@@ -1,2 +1,9 @@
-package com.microservico.product.repositories;public class ProductRepository {
+package com.microservico.product.repositories;
+
+import com.microservico.product.models.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }
