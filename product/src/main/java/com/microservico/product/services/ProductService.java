@@ -1,6 +1,6 @@
 package com.microservico.product.services;
 
-import com.microservico.product.exceptions.RecordNotFoundException;
+import com.microservico.product.exceptions.ResourceNotFoundException;
 import com.microservico.product.models.Product;
 import com.microservico.product.models.dtos.ProductDTO;
 import com.microservico.product.models.mappers.ProductMapper;
@@ -33,7 +33,7 @@ public class ProductService {
     public ProductDTO findById(@NotNull @Positive Long id) {
         return repository.findById(id)
                 .map(productMapper::toDTO)
-                .orElseThrow(() -> new RecordNotFoundException(id, Product.class.getSimpleName()));
+                .orElseThrow(() -> new ResourceNotFoundException(id, Product.class.getSimpleName()));
     }
 
     public ProductDTO create(@Valid @NotNull ProductDTO productDTO) {
@@ -52,12 +52,12 @@ public class ProductService {
                     recordFound.setPrice(product.getPrice());
 
                     return productMapper.toDTO(repository.save(recordFound));
-                }).orElseThrow(() -> new RecordNotFoundException(id, Product.class.getSimpleName()));
+                }).orElseThrow(() -> new ResourceNotFoundException(id, Product.class.getSimpleName()));
     }
 
     public void delete(@NotNull @Positive Long id) {
         repository.delete(repository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException(id, Product.class.getSimpleName())));
+                .orElseThrow(() -> new ResourceNotFoundException(id, Product.class.getSimpleName())));
     }
 
 }

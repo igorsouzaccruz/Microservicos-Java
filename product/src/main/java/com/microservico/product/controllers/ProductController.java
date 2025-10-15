@@ -6,7 +6,6 @@ import com.microservico.product.services.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +33,6 @@ public class ProductController implements IProductController {
     }
 
     @PostMapping
-    @ResponseStatus(code = HttpStatus.CREATED)
     public ProductDTO create(@RequestBody @Valid @NotNull ProductDTO product) {
         return service.create(product);
     }
@@ -45,7 +43,6 @@ public class ProductController implements IProductController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable @NotNull @Positive Long id) {
         service.delete(id);
     }

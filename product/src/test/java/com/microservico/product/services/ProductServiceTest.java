@@ -1,6 +1,6 @@
 package com.microservico.product.services;
 
-import com.microservico.product.exceptions.RecordNotFoundException;
+import com.microservico.product.exceptions.ResourceNotFoundException;
 import com.microservico.product.models.Product;
 import com.microservico.product.models.dtos.ProductDTO;
 import com.microservico.product.models.enums.CategoryEnum;
@@ -119,7 +119,7 @@ class ProductServiceTest {
         given(repository.findById(nonExistingId)).willReturn(Optional.empty());
 
         // When / Act & Then / Assert
-        assertThrows(RecordNotFoundException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             service.update(nonExistingId, anyDTO);
         });
 
@@ -149,7 +149,7 @@ class ProductServiceTest {
         String expectedMessage = "Product not found with id: 99";
 
         // When & Then
-        RuntimeException exception = assertThrows(RecordNotFoundException.class, () -> {
+        RuntimeException exception = assertThrows(ResourceNotFoundException.class, () -> {
             service.findById(99L);
         });
         assertEquals(expectedMessage, exception.getMessage());
