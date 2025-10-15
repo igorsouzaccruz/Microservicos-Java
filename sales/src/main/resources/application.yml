@@ -5,7 +5,6 @@ server:
   port: 8083
 eureka:
   client:
-    name: product-service
     service-url:
       defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true

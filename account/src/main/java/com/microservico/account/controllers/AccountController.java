@@ -1,2 +1,15 @@
-package com.microservico.account.controllers;public class AccountController {
+package com.microservico.account.controllers;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/account")
+public class AccountController {
+
+    @GetMapping
+    public String hello(){
+        return "Hello, World";
+    }
 }
