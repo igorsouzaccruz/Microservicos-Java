@@ -11,7 +11,7 @@
 	</parent>
 
 	<groupId>com.microservico</groupId>
-	<artifactId>account</artifactId>
+	<artifactId>account-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>account</name>
 	<description>Account Service (Cadastro e Login de Usuário)</description>

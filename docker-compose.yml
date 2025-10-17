@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  eureka:
+    build: ./eureka-server
+    ports: ["8761:8761"]
+  gateway:
+    build: ./gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+    ports: ["8080:8080"]
+    depends_on: [eureka]
+  account-service:
+    build: ./account-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+    depends_on: [eureka]
+  product-service:
+    build: ./product-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+    depends_on: [eureka]
+  sales-service:
+    build: ./sales-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+    depends_on: [eureka]

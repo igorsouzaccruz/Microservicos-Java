@@ -12,13 +12,13 @@
     </parent>
 
     <groupId>com.microservico</groupId>
-    <artifactId>product</artifactId>
+    <artifactId>product-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>product</name>
     <description>Product Service (Catálogo de Produtos)</description>
 
     <properties>
-        <java.version>25</java.version>
+        <java.version>23</java.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
     </properties>
 

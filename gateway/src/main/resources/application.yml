@@ -1,44 +1,40 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: gateway
-
   cloud:
     gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: true
-              lower-case-service-id: true
-              include-expression: true
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
 
-          routes:
-            # ---- Account Service ----
-            - id: account-service
-              uri: lb://account-service
-              predicates:
-                - Path=/api/account/**
-              filters:
-                - RewritePath=/api/account/(?<path>.*), /$\{path}
+      routes:
+        # ---- Account Service ----
+        - id: account-service
+          uri: lb://account-service
+          predicates:
+            - Path=/api/account/**
+          filters:
+            - RewritePath=/api/account/(?<path>.*), /${path}
 
-            # ---- Product Service ----
-            - id: product-service
-              uri: lb://product-service
-              predicates:
-                - Path=/api/product/**
-              filters:
-                - RewritePath=/api/product/(?<path>.*), /$\{path}
+        # ---- Product Service ----
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/product/(?<path>.*), /${path}
 
-            # ---- Sales Service ----
-            - id: sales-service
-              uri: lb://sales-service
-              predicates:
-                - Path=/api/sales/**
-              filters:
-                - RewritePath=/api/sales/(?<path>.*), /$\{path}
-
-server:
-  port: 8080
+        # ---- Sales Service ----
+        - id: sales-service
+          uri: lb://sales-service
+          predicates:
+            - Path=/api/sales/**
+          filters:
+            - RewritePath=/api/sales/(?<path>.*), /${path}
 
 eureka:
   client:

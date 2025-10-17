@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>com.microservico</groupId>
-	<artifactId>sales</artifactId>
+	<artifactId>sales-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sales</name>
 	<description>Sales Service (Registro de Vendas)</description>
