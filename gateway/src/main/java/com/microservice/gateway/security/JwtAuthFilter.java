@@ -7,7 +7,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -28,49 +27,62 @@ public class JwtAuthFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+
+        // ✅ Libera swagger e api-docs
+        if (path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-ui") ||
+                path.contains("/api-docs") ||
+                path.contains("/swagger-ui")) {
+            return chain.filter(exchange);
+        }
+
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        // 1. Se NÃO houver token, apenas continue a cadeia.
-        // O filtro de Autorização (do SecurityConfig) decidirá se a rota é
-        // pública (permitAll) ou se deve ser bloqueada (authenticated).
+        // Se não houver token, apenas continue. As regras de segurança decidirão se é público ou não.
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return chain.filter(exchange);
         }
 
+        String token = authHeader.substring(7);
+
         try {
-            String token = authHeader.substring(7);
             Claims claims = jwtValidator.parse(token);
 
-            // 2. Coloque os claims no exchange (como você já fazia, útil para o LoggingGlobalFilter)
+            // Guarda os claims no exchange (útil para logs ou auditoria)
             exchange.getAttributes().put("jwtClaims", claims);
 
-            // 3. (LÓGICA FALTANTE) Crie o objeto Authentication para o Spring Security
-            String username = claims.getSubject(); // ou "email", dependendo do seu token
+            // Recupera dados principais do token
+            String username = claims.getSubject();
+            Object roleClaim = claims.get("role");
 
-            // Ajuste "role" para o nome do claim que contém as roles/autoridades
-            @SuppressWarnings("unchecked")
-            List<String> roles = (List<String>) claims.get("role");
+            // Monta as autoridades conforme o formato do claim (string ou lista)
+            List<SimpleGrantedAuthority> authorities;
+            if (roleClaim instanceof String roleStr) {
+                authorities = List.of(new SimpleGrantedAuthority(roleStr));
+            } else if (roleClaim instanceof List<?> roleList) {
+                authorities = roleList.stream()
+                        .map(Object::toString)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+            } else {
+                authorities = Collections.emptyList();
+            }
 
-            List<SimpleGrantedAuthority> authorities = (roles != null) ?
-                    roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()) :
-                    Collections.emptyList();
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    username,
+                    null,
+                    authorities
+            );
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
-
-            // 4. Passe para o próximo filtro, mas com o Contexto de Segurança preenchido
+            // Injeta o contexto de autenticação no fluxo reativo
             return chain.filter(exchange)
                     .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
 
         } catch (Exception e) {
-            // 5. Se o token for inválido (expirado, assinatura errada),
-            // limpe o contexto e continue. O filtro de Autorização vai barrar.
+            // Token inválido, expirado ou assinatura incorreta
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            // Você pode querer retornar setComplete() se quiser barrar imediatamente
-            // return exchange.getResponse().setComplete();
-
-            // Ou apenas limpar o contexto e deixar o AuthorizationFilter decidir
-            return chain.filter(exchange)
-                    .contextWrite(ReactiveSecurityContextHolder.clearContext());
+            return exchange.getResponse().setComplete();
         }
     }
 }

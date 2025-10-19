@@ -28,14 +28,33 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(ex -> ex
-                        .pathMatchers("/api/account/login",
-                                "/api/account/register",
+                        .pathMatchers(
+                                "/api/accounts/login",
+                                "/api/accounts/register",
+
+                                // 🔓 Swagger UI e OpenAPI (com e sem prefixo /api/*)
+                                "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**").permitAll()
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/webjars/**",
+
+                                // ✅ Libera Swagger de cada microserviço (mantendo /api/... prefixo)
+                                "/api/accounts/v3/api-docs",
+                                "/api/accounts/swagger-ui/**",
+                                "/api/accounts/webjars/**",
+
+                                "/api/products/v3/api-docs",
+                                "/api/products/swagger-ui/**",
+                                "/api/products/webjars/**",
+
+                                "/api/sales/v3/api-docs",
+                                "/api/sales/swagger-ui/**",
+                                "/api/sales/webjars/**"
+                        ).permitAll()
                         .anyExchange().authenticated()
                 )
-                // 4. A adição do filtro continua igual
-                .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterBefore(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 }

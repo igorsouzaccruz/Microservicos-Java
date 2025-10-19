@@ -26,16 +26,13 @@ WORKDIR /app
 # Copia o JAR empacotado do estágio anterior
 COPY --from=builder /app/target/*.jar app.jar
 
-# Copia o diretório de chaves públicas (usado para validar JWT)
-COPY src/main/resources/keys /app/keys
-
 # Expõe a porta do Gateway
 EXPOSE 8080
 
 # Define variáveis padrão — sobrescritas via docker-compose se necessário
 ENV TZ=America/Fortaleza
 ENV LANG=pt_BR.UTF-8
-ENV JWT_PUBLIC_KEY_PATH=/app/keys/public.pem
+ENV JWT_PUBLIC_KEY_PATH=file:/app/keys/public.pem
 
 # Inicializa o Gateway
 ENTRYPOINT ["java", "-jar", "app.jar"]

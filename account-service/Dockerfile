@@ -26,10 +26,6 @@ WORKDIR /app
 # Copia o JAR compilado do estágio anterior
 COPY --from=builder /app/target/*.jar app.jar
 
-# Copia o diretório de chaves privadas (montado pelo docker-compose)
-# — mantém o caminho /app/keys igual ao usado na aplicação.yml
-COPY src/main/resources/keys /app/keys
-
 # Expondo a porta padrão
 EXPOSE 8081
 
@@ -38,7 +34,7 @@ ENV TZ=America/Fortaleza
 ENV LANG=pt_BR.UTF-8
 
 # Variáveis padrão para JWT (podem ser sobrescritas no docker-compose)
-ENV JWT_PRIVATE_KEY_PATH=/app/keys/private.pem
+ENV JWT_PRIVATE_KEY_PATH=file:/app/keys/private.pem
 ENV JWT_TTL_SECONDS=3600
 
 # Rodando o serviço

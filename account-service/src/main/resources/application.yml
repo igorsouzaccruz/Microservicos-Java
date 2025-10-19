@@ -23,13 +23,8 @@ spring:
         format_sql: true
     show-sql: true
 
-  security:
-    user:
-      name: ${SPRING_SECURITY_USER_NAME:admin}
-      password: ${SPRING_SECURITY_USER_PASSWORD:admin}
-
 jwt:
-  private-key-path: ${JWT_PRIVATE_KEY_PATH:classpath:keys/private.pem}
+  private-key-path: ${JWT_PRIVATE_KEY_PATH:file:/app/keys/private.pem}
   ttl-seconds: ${JWT_TTL_SECONDS:3600}
 
 eureka:
@@ -38,7 +33,6 @@ eureka:
     fetch-registry: true
     registry-fetch-interval-seconds: 5
     service-url:
-      # em docker, o compose define o nome do container "eureka"
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka:8761/eureka/}
   instance:
     prefer-ip-address: true

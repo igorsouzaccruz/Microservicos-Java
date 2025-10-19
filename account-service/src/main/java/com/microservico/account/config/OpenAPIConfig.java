@@ -11,9 +11,9 @@ public class OpenAPIConfig {
     @Bean
     OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info()
-                .title("Product Microservice")
+                .title("Account Microservice")
                 .version("v1")
-                .description("Product Service (Catálogo de Produtos).")
+                .description("Account Service (Register and Login).")
                 .termsOfService(""));
     }
 }

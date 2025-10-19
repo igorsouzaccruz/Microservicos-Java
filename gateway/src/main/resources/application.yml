@@ -26,7 +26,8 @@ eureka:
     lease-expiration-duration-in-seconds: 30
 
 jwt:
-  public-key-path: classpath:keys/public.pem
+#  public-key-path: classpath:keys/public.pem
+  private-key-path: ${JWT_PRIVATE_KEY_PATH:file:/app/keys/public.pem}
 
 logging:
   level:
@@ -35,3 +36,18 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: INFO
     com.microservice.gateway: DEBUG
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html   # URL principal para acessar a UI central
+    display-request-duration: true
+    urls:
+      - name: account-service
+        url: /api/accounts/v3/api-docs
+      - name: product-service
+        url: /api/products/v3/api-docs
+      - name: sales-service
+        url: /api/sales/v3/api-docs

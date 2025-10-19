@@ -47,12 +47,25 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // ✅ Endpoints públicos (login, registro e Swagger)
                         .requestMatchers(
-                                "/api/account/login",
-                                "/api/account/register",
+                                // 🔓 Endpoints públicos da API
+                                "/api/accounts/login",
+                                "/api/accounts/register",
+
+                                // 🔓 Swagger sem prefixo
+                                "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**",
                                 "/swagger-resources/**",
+                                "/v3/api-docs/**",
                                 "/webjars/**",
+
+                                // 🔓 Swagger via Gateway (com prefixo /api/accounts/)
+                                "/api/accounts/swagger-ui.html",
+                                "/api/accounts/swagger-ui/**",
+                                "/api/accounts/swagger-resources/**",
+                                "/api/accounts/v3/api-docs/**",
+                                "/api/accounts/webjars/**",
+
+                                // 🔓 H2 Console (opcional)
                                 "/h2-console/**"
                         ).permitAll()
                         .anyRequest().authenticated() // todos os outros exigem token

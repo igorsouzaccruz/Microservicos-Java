@@ -13,10 +13,10 @@ public class GatewayRoutesConfig {
         return builder.routes()
                 // 🟢 Account Service
                 .route("account-service", r -> r
-                        .path("/api/account/**")
+                        .path("/api/accounts/**")
                         .filters(f -> f
                                 // Remove o prefixo /api/account ao redirecionar
-                                .rewritePath("/api/account/(?<path>.*)", "/api/account/${path}")
+                                .rewritePath("/api/accounts/(?<path>.*)", "/api/accounts/${path}")
                                 // Exemplo: adiciona header customizado
                                 .addRequestHeader("X-Gateway", "SpringCloudGateway")
                         )
@@ -25,9 +25,20 @@ public class GatewayRoutesConfig {
 
                 // 🟣 Product Service
                 .route("product-service", r -> r
-                        .path("/api/product/**")
+                        .path("/api/products/**")
                         .filters(f -> f
-                                .rewritePath("/api/product/(?<path>.*)", "/${path}")
+                                .rewritePath("/api/products/(?<path>.*)", "/api/products/${path}")
+                                .filter((exchange, chain) -> {
+                                    String auth = exchange.getRequest().getHeaders().getFirst("Authorization");
+                                    if (auth != null) {
+                                        return chain.filter(
+                                                exchange.mutate()
+                                                        .request(au -> au.header("Authorization", auth))
+                                                        .build()
+                                        );
+                                    }
+                                    return chain.filter(exchange);
+                                })
                         )
                         .uri("lb://product-service")
                 )
@@ -36,7 +47,7 @@ public class GatewayRoutesConfig {
                 .route("sales-service", r -> r
                         .path("/api/sales/**")
                         .filters(f -> f
-                                .rewritePath("/api/sales/(?<path>.*)", "/${path}")
+                                .rewritePath("/api/sales/(?<path>.*)", "/api/sales/${path}")
                         )
                         .uri("lb://sales-service")
                 )
