@@ -1,9 +1,21 @@
 server:
   port: 8761
+
 spring:
   application:
     name: eureka-server
+
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+
+  instance:
+    hostname: eureka
+    prefer-ip-address: true
+
+logging:
+  level:
+    root: INFO
+    com.netflix.eureka: INFO
+    org.springframework.cloud: INFO

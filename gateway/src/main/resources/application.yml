@@ -4,15 +4,14 @@ server:
 spring:
   application:
     name: gateway
+
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
-
       routes:
-        # ---- Account Service ----
         - id: account-service
           uri: lb://account-service
           predicates:
@@ -20,7 +19,6 @@ spring:
           filters:
             - RewritePath=/api/account/(?<path>.*), /${path}
 
-        # ---- Product Service ----
         - id: product-service
           uri: lb://product-service
           predicates:
@@ -28,7 +26,6 @@ spring:
           filters:
             - RewritePath=/api/product/(?<path>.*), /${path}
 
-        # ---- Sales Service ----
         - id: sales-service
           uri: lb://sales-service
           predicates:
@@ -38,12 +35,22 @@ spring:
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+jwt:
+  public-key-path: classpath:keys/public.pem
 
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
-    reactor.netty.http.client: DEBUG
+    root: INFO
+    org.springframework.cloud.gateway: INFO
+    org.springframework.security: DEBUG
+    org.springframework.web: INFO
+    com.microservice.gateway: DEBUG
