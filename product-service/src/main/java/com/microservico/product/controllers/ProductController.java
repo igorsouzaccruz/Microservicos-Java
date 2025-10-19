@@ -13,7 +13,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products") 
 public class ProductController implements IProductController {
 
     private final ProductService service;

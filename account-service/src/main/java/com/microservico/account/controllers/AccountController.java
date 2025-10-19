@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/accounts")
 public class AccountController {
 
     private final AuthService authService;

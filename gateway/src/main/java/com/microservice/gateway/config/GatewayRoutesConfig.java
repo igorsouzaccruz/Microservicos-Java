@@ -16,7 +16,7 @@ public class GatewayRoutesConfig {
                         .path("/api/accounts/**")
                         .filters(f -> f
                                 // Remove o prefixo /api/account ao redirecionar
-                                .rewritePath("/api/accounts/(?<path>.*)", "/api/accounts/${path}")
+                                .rewritePath("/api/accounts/(?<path>.*)", "/${path}")
                                 // Exemplo: adiciona header customizado
                                 .addRequestHeader("X-Gateway", "SpringCloudGateway")
                         )
@@ -27,18 +27,7 @@ public class GatewayRoutesConfig {
                 .route("product-service", r -> r
                         .path("/api/products/**")
                         .filters(f -> f
-                                .rewritePath("/api/products/(?<path>.*)", "/api/products/${path}")
-                                .filter((exchange, chain) -> {
-                                    String auth = exchange.getRequest().getHeaders().getFirst("Authorization");
-                                    if (auth != null) {
-                                        return chain.filter(
-                                                exchange.mutate()
-                                                        .request(au -> au.header("Authorization", auth))
-                                                        .build()
-                                        );
-                                    }
-                                    return chain.filter(exchange);
-                                })
+                                .rewritePath("/api/(?<remaining>.*)", "/${remaining}")
                         )
                         .uri("lb://product-service")
                 )
@@ -47,7 +36,7 @@ public class GatewayRoutesConfig {
                 .route("sales-service", r -> r
                         .path("/api/sales/**")
                         .filters(f -> f
-                                .rewritePath("/api/sales/(?<path>.*)", "/api/sales/${path}")
+                                .rewritePath("/api/(?<remaining>.*)", "/${remaining}")
                         )
                         .uri("lb://sales-service")
                 )

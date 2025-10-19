@@ -18,7 +18,7 @@ import java.util.List;
 
 @Validated
 @Tag(name = "Products", description = "Endpoints para Gerenciamento de Produtos")
-@RequestMapping("/api/products")
+@RequestMapping("/products") 
 public interface IProductController {
 
     @Operation(

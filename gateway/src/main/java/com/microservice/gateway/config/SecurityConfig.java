@@ -29,28 +29,21 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(ex -> ex
                         .pathMatchers(
+                                // ✅ 1. Endpoints públicos da API
                                 "/api/accounts/login",
                                 "/api/accounts/register",
 
-                                // 🔓 Swagger UI e OpenAPI (com e sem prefixo /api/*)
+                                // ✅ Página principal do Swagger
                                 "/swagger-ui.html",
+
+                                // ⬇️ A LINHA QUE FALTAVA ⬇️
+                                // Libera os assets (CSS/JS) do Swagger
+                                "/webjars/**", 
+
+                                // ✅ Configs e docs do Swagger
                                 "/swagger-ui/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/webjars/**",
-
-                                // ✅ Libera Swagger de cada microserviço (mantendo /api/... prefixo)
-                                "/api/accounts/v3/api-docs",
-                                "/api/accounts/swagger-ui/**",
-                                "/api/accounts/webjars/**",
-
-                                "/api/products/v3/api-docs",
-                                "/api/products/swagger-ui/**",
-                                "/api/products/webjars/**",
-
-                                "/api/sales/v3/api-docs",
-                                "/api/sales/swagger-ui/**",
-                                "/api/sales/webjars/**"
+                                "/v3/api-docs/**", 
+                                "/api/{service}/v3/api-docs"
                         ).permitAll()
                         .anyExchange().authenticated()
                 )

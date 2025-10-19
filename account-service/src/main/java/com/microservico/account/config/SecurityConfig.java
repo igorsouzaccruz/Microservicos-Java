@@ -48,8 +48,8 @@ public class SecurityConfig {
                         // ✅ Endpoints públicos (login, registro e Swagger)
                         .requestMatchers(
                                 // 🔓 Endpoints públicos da API
-                                "/api/accounts/login",
-                                "/api/accounts/register",
+                                "/login",
+                                "/register",
 
                                 // 🔓 Swagger sem prefixo
                                 "/swagger-ui.html",
@@ -57,14 +57,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**",
                                 "/webjars/**",
-
-                                // 🔓 Swagger via Gateway (com prefixo /api/accounts/)
-                                "/api/accounts/swagger-ui.html",
-                                "/api/accounts/swagger-ui/**",
-                                "/api/accounts/swagger-resources/**",
-                                "/api/accounts/v3/api-docs/**",
-                                "/api/accounts/webjars/**",
-
+                                
                                 // 🔓 H2 Console (opcional)
                                 "/h2-console/**"
                         ).permitAll()

@@ -1,5 +1,6 @@
 server:
   port: 8080
+  forward-headers-strategy: native
 
 spring:
   application:
@@ -27,7 +28,7 @@ eureka:
 
 jwt:
 #  public-key-path: classpath:keys/public.pem
-  private-key-path: ${JWT_PRIVATE_KEY_PATH:file:/app/keys/public.pem}
+  public-key-path: ${JWT_PUBLIC_KEY_PATH:file:/app/keys/public.pem}
 
 logging:
   level:
