@@ -1,11 +1,32 @@
-# Dockerfile alternativo (faz build dentro do container)
-FROM eclipse-temurin:23-jdk AS build
-WORKDIR /app
-COPY . .
-RUN ./mvnw clean package -DskipTests
+# ===============================
+# STAGE 1 — BUILD (JDK 25 + Maven)
+# ===============================
+FROM eclipse-temurin:25-jdk AS builder
 
-FROM eclipse-temurin:23-jdk
+# Instala Maven dentro do container (pois a imagem JDK pura não vem com ele)
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+
+# Copia pom.xml e baixa dependências (melhor para cache)
+COPY pom.xml .
+RUN mvn -B -f pom.xml dependency:go-offline
+
+# Copia o código-fonte e empacota
+COPY src ./src
+RUN mvn -B clean package -DskipTests
+
+# ===============================
+# STAGE 2 — RUNTIME (JDK 25 puro)
+# ===============================
+FROM eclipse-temurin:25-jdk AS runtime
+
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8083
-ENTRYPOINT ["java","-jar","app.jar"]
+
+ENV TZ=America/Fortaleza
+ENV LANG=pt_BR.UTF-8
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
