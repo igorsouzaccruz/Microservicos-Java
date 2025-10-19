@@ -48,12 +48,6 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>6.5.5</version>
-		</dependency>
-
 		<!-- JWT RSA -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

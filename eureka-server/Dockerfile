@@ -1,25 +1,23 @@
 # ===============================
-# STAGE 1 — BUILD (JDK 25 + Maven instalado)
+# STAGE 1 — BUILD (JDK 21 + Maven)
 # ===============================
-FROM eclipse-temurin:25-jdk AS builder
+FROM eclipse-temurin:21-jdk AS builder
 
-# Instala Maven manualmente (não vem na imagem do JDK puro)
 RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
-# Copia pom.xml e baixa dependências (cache eficiente)
+# Copia POM e baixa dependências
 COPY pom.xml .
 RUN mvn -B -f pom.xml dependency:go-offline
 
-# Copia o código-fonte e compila
+# Copia o código e compila
 COPY src ./src
 RUN mvn -B clean package -DskipTests
 
 # ===============================
-# STAGE 2 — RUNTIME (JDK 25 puro)
+# STAGE 2 — RUNTIME (JDK 21 puro)
 # ===============================
-FROM eclipse-temurin:25-jdk AS runtime
+FROM eclipse-temurin:21-jdk AS runtime
 
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar

@@ -12,15 +12,15 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.microservico</groupId>
+    <groupId>com.microservice</groupId>
     <artifactId>eureka-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>eureka-server</name>
-    <description>Eureka Server - Spring Boot 3.5 / Java 25</description>
+    <description>Eureka Server - Spring Boot 3.5 / Java 21</description>
 
     <properties>
-        <java.version>25</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>21</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
     </properties>
 
@@ -37,19 +37,19 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Eureka Server -->
+        <!--  Eureka Server -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
 
-        <!-- Actuator (health check) -->
+        <!-- Actuator (para healthcheck e monitoramento) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Test -->
+        <!--  Testes -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -59,18 +59,20 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-
+            <!-- Compilador ajustado para Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <release>${java.version}</release>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
+            </plugin>
+
+            <!-- Empacotamento Spring Boot -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
