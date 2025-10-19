@@ -1,4 +1,4 @@
-package com.microservico.product.config;
+package com.microservico.account.config;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,8 @@
-package com.microservico.product.exceptions.handler;
+package com.microservico.account.handler;
 
-import com.microservico.product.exceptions.ExceptionResponse;
-import com.microservico.product.exceptions.ResourceNotFoundException;
+import com.microservico.account.exceptions.ExceptionResponse;
+import com.microservico.account.exceptions.ResourceNotFoundException;
+import com.microservico.account.exceptions.handler.CustomizedResponseEntityExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

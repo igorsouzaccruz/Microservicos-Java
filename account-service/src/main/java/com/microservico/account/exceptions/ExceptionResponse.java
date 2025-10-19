@@ -1,4 +1,4 @@
-package com.microservico.product.exceptions;
+package com.microservico.account.exceptions;
 
 import java.io.Serial;
 import java.io.Serializable;

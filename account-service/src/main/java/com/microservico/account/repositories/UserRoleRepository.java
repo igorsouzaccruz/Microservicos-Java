@@ -1,2 +1,12 @@
-package com.microservico.account.repositories;public interface UserRoleRepository {
+package com.microservico.account.repositories;
+
+import com.microservico.account.models.UserRole;
+import com.microservico.account.models.enums.Role;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+    Optional<UserRole> findByAccountId(Long accountId);
+    boolean existsByAccountIdAndRole(Long accountId, Role role);
 }

@@ -1,11 +1,53 @@
+server:
+  port: ${SERVER_PORT:8081}
+
 spring:
   application:
     name: account-service
-server:
-  port: 8082
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:accountdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driver-class-name: org.h2.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  security:
+    user:
+      name: ${SPRING_SECURITY_USER_NAME:admin}
+      password: ${SPRING_SECURITY_USER_PASSWORD:admin}
+
+jwt:
+  private-key-path: ${JWT_PRIVATE_KEY_PATH:classpath:keys/private.pem}
+  ttl-seconds: ${JWT_TTL_SECONDS:3600}
+
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+    registry-fetch-interval-seconds: 5
+    service-url:
+      # em docker, o compose define o nome do container "eureka"
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    org.springframework.security: INFO
+    com.microservico.account: DEBUG

@@ -1,7 +1,6 @@
-package com.microservico.product.exceptions.handler;
+package com.microservico.account.exceptions.handler;
 
-import com.microservico.product.exceptions.ExceptionResponse;
-import com.microservico.product.exceptions.ResourceNotFoundException;
+import com.microservico.account.exceptions.ResourceNotFoundException;
 import io.micrometer.common.lang.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import com.microservico.account.exceptions.ExceptionResponse;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Instant;

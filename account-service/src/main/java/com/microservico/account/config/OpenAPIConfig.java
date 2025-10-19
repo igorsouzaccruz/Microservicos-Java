@@ -1,4 +1,4 @@
-package com.microservico.product.config;
+package com.microservico.account.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
