@@ -25,14 +25,14 @@ import java.util.List;
         description = "Gerencia operações relacionadas às vendas realizadas pelos usuários."
 )
 @RequestMapping("/sales")
-public interface ISaleController {
+public interface ISaleControllerDocs {
 
     @Operation(
             summary = "Cria uma nova venda",
             description = """
-                Cria um novo registro de venda com base nas informações fornecidas.  
-                O cabeçalho `X-User-Id` é obrigatório e identifica o usuário responsável pela venda.
-                """,
+                    Cria um novo registro de venda com base nas informações fornecidas.  
+                    O cabeçalho `X-User-Id` é obrigatório e identifica o usuário responsável pela venda.
+                    """,
             requestBody = @RequestBody(
                     required = true,
                     description = "Objeto contendo os detalhes da venda a ser criada.",

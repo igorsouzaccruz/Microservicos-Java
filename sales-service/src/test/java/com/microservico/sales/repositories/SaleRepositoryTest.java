@@ -1,6 +1,5 @@
 package com.microservico.sales.repositories;
 
-import static org.junit.jupiter.api.Assertions.*;
 import com.microservico.sales.models.Sale;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

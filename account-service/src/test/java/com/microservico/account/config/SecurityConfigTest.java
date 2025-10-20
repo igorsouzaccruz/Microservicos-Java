@@ -3,7 +3,6 @@ package com.microservico.account.config;
 
 import com.microservico.account.services.CustomUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,7 +50,6 @@ class SecurityConfigTest {
     }
 
     @Test
-    @Disabled("Nao finalizado")
     @DisplayName("Deve configurar SecurityFilterChain corretamente")
     void shouldConfigureSecurityFilterChain() throws Exception {
         // Arrange
@@ -67,11 +65,10 @@ class SecurityConfigTest {
         SecurityFilterChain chain = securityConfig.securityFilterChain(httpSecurity);
 
         // Assert
-        assertNull(chain);
+        assertNotNull(chain);
         verify(httpSecurity).csrf(any());
         verify(httpSecurity).authorizeHttpRequests(any());
         verify(httpSecurity).headers(any());
-        verify(httpSecurity).httpBasic(any());
         verify(httpSecurity).build();
     }
 

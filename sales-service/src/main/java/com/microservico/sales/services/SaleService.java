@@ -1,6 +1,6 @@
 package com.microservico.sales.services;
 
-import com.microservico.sales.client.ProductClient;
+import com.microservico.sales.clients.ProductClient;
 import com.microservico.sales.exceptions.ResourceNotFoundException;
 import com.microservico.sales.models.Sale;
 import com.microservico.sales.models.dtos.ProductResponse;
@@ -35,7 +35,7 @@ public class SaleService {
         ProductResponse product = productClient.getProductById(saleRequest.getProductId());
 
         if (Objects.isNull(product)) {
-            throw new ResourceNotFoundException(saleRequest.getProductId(), "Product not found in Product Service");
+            throw new ResourceNotFoundException(saleRequest.getProductId(), ProductResponse.class.getSimpleName());
         }
 
         Sale sale = SaleMapper.toEntity(saleRequest);

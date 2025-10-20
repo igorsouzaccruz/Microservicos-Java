@@ -1,5 +1,6 @@
-package com.microservico.sales.client;
+package com.microservico.sales.clients;
 
+import com.microservico.sales.exceptions.ResourceNotFoundException;
 import com.microservico.sales.models.dtos.ProductResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -30,15 +31,14 @@ class ProductClientTest {
     @BeforeEach
     void setUp() {
         String baseUrl = mockWebServer.url("/").toString();
-
         WebClient.Builder builder = WebClient.builder();
-        productClient = new ProductClient(builder, baseUrl);
+        productClient = new ProductClient(baseUrl, builder);
     }
 
     @Test
     @DisplayName("Deve retornar ProductResponse quando o produto for encontrado")
     void shouldReturnProductResponse_WhenProductExists() throws InterruptedException {
-        // Arrange — Simula resposta JSON do product-service
+        // Arrange 
         String json = """
                 {
                     "id": 1,
@@ -61,7 +61,6 @@ class ProductClientTest {
         assertEquals("Teclado Mecânico", response.name());
         assertEquals(250.50, response.price());
 
-        // Verifica se chamada HTTP foi feita corretamente
         var recorded = mockWebServer.takeRequest(1, TimeUnit.SECONDS);
         assertNotNull(recorded);
         assertEquals("GET", recorded.getMethod());
@@ -69,12 +68,17 @@ class ProductClientTest {
     }
 
     @Test
-    @DisplayName("Deve retornar null quando o produto não for encontrado (404)")
-    void shouldReturnNull_WhenProductNotFound() {
+    @DisplayName("Deve lançar ResourceNotFoundException quando o produto não for encontrado (404)")
+    void shouldThrowResourceNotFoundException_WhenProductNotFound() {
+        // Arrange 
         mockWebServer.enqueue(new MockResponse().setResponseCode(404));
 
-        ProductResponse response = productClient.getProductById(999L);
-
-        assertNull(response, "Quando o produto não existe, deve retornar null");
+        // Act & Assert
+        ResourceNotFoundException thrown = assertThrows(
+                ResourceNotFoundException.class,
+                () -> productClient.getProductById(999L),
+                "Deveria lançar ResourceNotFoundException para um produto inexistente"
+        );
+        assertEquals("ProductResponse not found with id: 999", thrown.getMessage());
     }
 }

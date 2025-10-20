@@ -1,6 +1,6 @@
 package com.microservico.product.controllers;
 
-import com.microservico.product.controllers.interfaces.IProductController;
+import com.microservico.product.controllers.interfaces.IProductControllerDocs;
 import com.microservico.product.models.dtos.ProductDTO;
 import com.microservico.product.services.ProductService;
 import jakarta.validation.Valid;
@@ -13,8 +13,8 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/products") 
-public class ProductController implements IProductController {
+@RequestMapping("/products")
+public class ProductController implements IProductControllerDocs {
 
     private final ProductService service;
 

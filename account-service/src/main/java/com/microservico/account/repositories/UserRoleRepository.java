@@ -1,7 +1,6 @@
 package com.microservico.account.repositories;
 
 import com.microservico.account.models.UserRole;
-import com.microservico.account.models.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -2,7 +2,7 @@ package com.microservico.account.models.mapper;
 
 import com.microservico.account.models.Account;
 import com.microservico.account.models.dto.RegisterDTO;
-import org.springframework.stereotype.Component; // <-- MELHORIA: Torna um Bean do Spring
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 

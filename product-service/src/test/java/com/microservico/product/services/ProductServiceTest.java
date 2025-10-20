@@ -32,7 +32,7 @@ class ProductServiceTest {
     @Mock
     private ProductRepository repository;
 
-    private ProductMapper mapper = new ProductMapper();
+    private final ProductMapper mapper = new ProductMapper();
 
     private ProductService service;
 

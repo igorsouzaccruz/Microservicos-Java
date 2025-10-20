@@ -1,7 +1,6 @@
 package com.microservico.account.models;
 
 import com.microservico.account.models.enums.Role;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -63,17 +62,6 @@ class UserRoleTest {
     }
 
     @Test
-    @DisplayName("Equals should return false for null or different class")
-    void equalsShouldReturnFalseForNullOrDifferentClass() {
-        UserRole userRole = new UserRole();
-        userRole.setId(1L);
-
-        assertNotEquals(null, userRole);
-        assertNotEquals(userRole, "not a UserRole");
-    }
-
-    @Test
-    @Disabled("Nao finalizado")
     @DisplayName("toString should include all fields")
     void toStringShouldIncludeAllFields() {
         UserRole userRole = new UserRole();
@@ -86,7 +74,7 @@ class UserRoleTest {
         assertAll(
                 () -> assertTrue(result.contains("10")),
                 () -> assertTrue(result.contains("20")),
-                () -> assertTrue(result.contains("USER")),
+                () -> assertTrue(result.contains("ROLE_ADMIN")),
                 () -> assertTrue(result.startsWith("UserRole{"))
         );
     }

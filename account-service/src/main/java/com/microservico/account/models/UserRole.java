@@ -14,14 +14,15 @@ public class UserRole implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Long accountId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable=false, length=20)
+    @Column(nullable = false, length = 20)
     private Role role;
 
-    public UserRole() {}
+    public UserRole() {
+    }
 
     public UserRole(Long accountId, Role role) {
         this.accountId = accountId;

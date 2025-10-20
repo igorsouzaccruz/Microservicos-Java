@@ -3,6 +3,7 @@ package com.microservico.sales.models.mapper;
 import com.microservico.sales.models.Sale;
 import com.microservico.sales.models.dtos.SaleRequest;
 import com.microservico.sales.models.dtos.SaleResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SaleMapperTest {
 
@@ -38,6 +38,7 @@ class SaleMapperTest {
         Sale result = SaleMapper.toEntity(request);
 
         assertThat(result).isNotNull();
+        Assertions.assertNotNull(result);
         assertThat(result.getProductId()).isEqualTo(10L);
         assertThat(result.getUserId()).isEqualTo(5L);
         assertThat(result.getQuantity()).isEqualTo(3);
@@ -56,6 +57,7 @@ class SaleMapperTest {
         SaleResponse dto = SaleMapper.toDto(sale);
 
         assertThat(dto).isNotNull();
+        Assertions.assertNotNull(dto);
         assertThat(dto.id()).isEqualTo(1L);
         assertThat(dto.productId()).isEqualTo(10L);
         assertThat(dto.userId()).isEqualTo(5L);
@@ -92,6 +94,7 @@ class SaleMapperTest {
         // Convert entity -> dto -> entity
         SaleResponse dto = SaleMapper.toDto(sale);
         Sale result = new Sale();
+        Assertions.assertNotNull(dto);
         result.setProductId(dto.productId());
         result.setUserId(dto.userId());
         result.setQuantity(dto.quantity());

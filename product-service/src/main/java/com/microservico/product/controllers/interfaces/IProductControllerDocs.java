@@ -18,8 +18,8 @@ import java.util.List;
 
 @Validated
 @Tag(name = "Products", description = "Endpoints para Gerenciamento de Produtos")
-@RequestMapping("/products") 
-public interface IProductController {
+@RequestMapping("/products")
+public interface IProductControllerDocs {
 
     @Operation(
             summary = "Listar todos os produtos",

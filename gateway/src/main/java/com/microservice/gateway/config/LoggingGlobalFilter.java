@@ -8,7 +8,6 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -20,16 +19,12 @@ public class LoggingGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
-        String method = exchange.getRequest().getMethod() != null
-                ? exchange.getRequest().getMethod().name()
-                : "UNKNOWN";
+        String method = exchange.getRequest().getMethod().name();
 
         log.info("➡️ [{}] {}", method, path);
 
-        // 🔹 Recupera os claims do filtro anterior (JwtAuthFilter)
         Claims claims = exchange.getAttribute("jwtClaims");
 
-        // 🔹 Se houver JWT válido, adiciona headers com informações úteis
         ServerHttpRequest.Builder mutatedRequest = exchange.getRequest().mutate();
         if (claims != null) {
             if (claims.get("email") != null)
@@ -42,7 +37,6 @@ public class LoggingGlobalFilter implements GlobalFilter, Ordered {
                 mutatedRequest.header("X-User-Role", claims.get("role").toString());
         }
 
-        // 🔹 Cria novo exchange com a request modificada
         ServerWebExchange mutatedExchange = exchange.mutate()
                 .request(mutatedRequest.build())
                 .build();
@@ -59,6 +53,6 @@ public class LoggingGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0; // executa depois do JwtAuthFilter
+        return 0;
     }
 }

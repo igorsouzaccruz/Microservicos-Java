@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+# Diz ao JwtService onde encontrar a chave privada DURANTE OS TESTES
+jwt:
+  private-key-path: classpath:keys/private.pem
+  ttl-seconds: 3600
+
+# ✅ CORREÇÃO: Desabilita o cliente Eureka para os testes de integração.
+# Isso impede que a aplicação tente se conectar ao servidor Eureka,
+# que não está disponível no ambiente de teste local.
+eureka:
+  client:
+    enabled: false

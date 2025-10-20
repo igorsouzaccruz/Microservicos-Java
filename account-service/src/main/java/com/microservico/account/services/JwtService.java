@@ -1,13 +1,13 @@
 package com.microservico.account.services;
 
 import io.jsonwebtoken.Jwts;
-import org.springframework.core.io.Resource;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -23,11 +23,17 @@ public class JwtService {
     @Value("${jwt.ttl-seconds:3600}")
     private long ttlSeconds;
 
+    private PrivateKey privateKey;
+
+    @PostConstruct
+    public void init() {
+        this.privateKey = loadPrivateKey();
+    }
+
     private PrivateKey loadPrivateKey() {
 
 
         try (InputStream inputStream = privateKeyResource.getInputStream()) {
-
             byte[] keyBytes = inputStream.readAllBytes();
 
             String pem = new String(keyBytes, StandardCharsets.UTF_8)
@@ -36,12 +42,11 @@ public class JwtService {
                     .replaceAll("\\s+", "");
 
             var decodedKeyBytes = Base64.getDecoder().decode(pem);
-
             var keySpec = new PKCS8EncodedKeySpec(decodedKeyBytes);
             return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
 
         } catch (Exception e) {
-              throw new IllegalStateException("Falha ao carregar RSA private key", e);
+            throw new IllegalStateException("Falha ao carregar RSA private key", e);
         }
     }
 
@@ -55,7 +60,7 @@ public class JwtService {
                 .claim("role", role)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(exp))
-                .signWith(loadPrivateKey(), Jwts.SIG.RS256)
+                .signWith(privateKey, Jwts.SIG.RS256)
                 .compact();
     }
 }

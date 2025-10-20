@@ -9,4 +9,5 @@ public record RegisterDTO(
         @NotBlank @Size(min = 6, max = 50) String password,
         @NotBlank @Size(max = 300) String address,
         boolean admin
-) {}
+) {
+}

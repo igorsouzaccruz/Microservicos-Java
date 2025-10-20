@@ -1,6 +1,7 @@
 package com.microservico.account.exceptions.handler;
 
 import com.microservico.account.exceptions.EmailAlreadyExistsException;
+import com.microservico.account.exceptions.ExceptionResponse;
 import com.microservico.account.exceptions.InvalidCredentialsException;
 import com.microservico.account.exceptions.ResourceNotFoundException;
 import io.micrometer.common.lang.NonNull;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import com.microservico.account.exceptions.ExceptionResponse;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Instant;

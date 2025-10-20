@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SaleTest {
     private static ValidatorFactory factory;
@@ -35,7 +35,7 @@ class SaleTest {
     @Test
     void testSale_WhenAllFieldsAreCorrect_ShouldBeValid() {
         // Given / Arrange
-        Sale sale = new Sale(1L, 2L,  3);
+        Sale sale = new Sale(1L, 2L, 3);
 
         // When / Act
         Set<ConstraintViolation<Sale>> violations = validator.validate(sale);
@@ -107,7 +107,7 @@ class SaleTest {
     @DisplayName("Should initialize ativo=true and saleDate when using parameterized constructor")
     @Test
     void testSale_ParameterizedConstructor_ShouldInitializeFields() {
-        Sale sale = new Sale(1L, 2L,  3);
+        Sale sale = new Sale(1L, 2L, 3);
         assertThat(sale.getAtivo()).isTrue();
         assertThat(sale.getSaleDate()).isNotNull();
     }
@@ -115,7 +115,7 @@ class SaleTest {
     @DisplayName("Should initialize ativo=true and saleDate when using parameterized constructor with id")
     @Test
     void testSale_ParameterizedConstructorWithId_ShouldInitializeFields() {
-        Sale sale = new Sale(1L,1L, 2L,  3);
+        Sale sale = new Sale(1L, 1L, 2L, 3);
         assertThat(sale.getAtivo()).isTrue();
         assertThat(sale.getSaleDate()).isNotNull();
     }

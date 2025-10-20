@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.microservico.sales.client.ProductClient;
+import com.microservico.sales.clients.ProductClient;
 import com.microservico.sales.models.dtos.ProductResponse;
 import com.microservico.sales.models.dtos.SaleRequest;
 import com.microservico.sales.models.dtos.SaleResponse;
@@ -75,18 +75,9 @@ class SaleIntegrationControllerTest {
                 .build();
 
         when(productClient.getProductById(1L))
-                .thenReturn(new ProductResponse(1L, "Mocked Product",  100.0));
+                .thenReturn(new ProductResponse(1L, "Mocked Product", 100.0));
         when(productClient.getProductById(2L))
                 .thenReturn(new ProductResponse(2L, "Other Product", 50.0));
-    }
-
-    @TestConfiguration
-    static class MockConfig {
-        @Bean
-        @Primary
-        public ProductClient productClient() {
-            return Mockito.mock(ProductClient.class);
-        }
     }
 
     @Test
@@ -158,5 +149,14 @@ class SaleIntegrationControllerTest {
                 .post()
                 .then()
                 .statusCode(400);
+    }
+
+    @TestConfiguration
+    static class MockConfig {
+        @Bean
+        @Primary
+        public ProductClient productClient() {
+            return Mockito.mock(ProductClient.class);
+        }
     }
 }

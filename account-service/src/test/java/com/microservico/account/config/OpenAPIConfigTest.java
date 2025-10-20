@@ -4,12 +4,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OpenAPIConfigTest {
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "jwt.private-key-path=classpath:keys/private.pem"
+)
+@ActiveProfiles("test")class OpenAPIConfigTest {
     @LocalServerPort
     private int port;
 

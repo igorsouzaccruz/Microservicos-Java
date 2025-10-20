@@ -44,8 +44,8 @@ public class ProductControllerIntegrationTest {
         specification = new RequestSpecBuilder()
                 .setBasePath("/products")
                 .setPort(port)
-                    .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                    .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
     }
 
@@ -63,12 +63,12 @@ public class ProductControllerIntegrationTest {
                 .contentType("application/json") // Usando a string diretamente
                 .body(productDTO)
                 .when()
-                    .post()
+                .post()
                 .then()
-                    .statusCode(201)
-                        .extract()
-                            .body()
-                                .asString();
+                .statusCode(201)
+                .extract()
+                .body()
+                .asString();
 
         ProductDTO createdProduct = objectMapper.readValue(content, ProductDTO.class);
         productDTO = createdProduct;
@@ -98,12 +98,12 @@ public class ProductControllerIntegrationTest {
                 .pathParam("id", productDTO.id())
                 .body(updatedData)
                 .when()
-                    .put("{id}")
+                .put("{id}")
                 .then()
-                    .statusCode(200)
-                        .extract()
-                            .body()
-                                .asString();
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
 
         ProductDTO updatedProduct = objectMapper.readValue(content, ProductDTO.class);
         productDTO = updatedProduct;
@@ -122,17 +122,17 @@ public class ProductControllerIntegrationTest {
         var content = given().spec(specification)
                 .pathParam("id", productDTO.id())
                 .when()
-                    .get("{id}")
+                .get("{id}")
                 .then()
-                    .statusCode(200)
-                        .extract()
-                            .body()
-                                .asString();
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
 
         ProductDTO foundProduct = objectMapper.readValue(content, ProductDTO.class);
 
         assertNotNull(foundProduct);
-        assertEquals(new BigDecimal("399.00"),foundProduct.price());
+        assertEquals(new BigDecimal("399.00"), foundProduct.price());
         assertEquals(productDTO.id(), foundProduct.id());
     }
 
@@ -144,12 +144,12 @@ public class ProductControllerIntegrationTest {
 
         var content = given().spec(specification)
                 .when()
-                    .get()
+                .get()
                 .then()
-                    .statusCode(200)
-                        .extract()
-                        .body()
-                        .asString();
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
 
         List<ProductDTO> products = Arrays.asList(objectMapper.readValue(content, ProductDTO[].class));
         assertTrue(products.stream().anyMatch(p -> p.id().equals(productDTO.id())));
@@ -165,8 +165,8 @@ public class ProductControllerIntegrationTest {
         given().spec(specification)
                 .pathParam("id", productDTO.id())
                 .when()
-                    .delete("{id}")
-                        .then()
-                            .statusCode(204);
+                .delete("{id}")
+                .then()
+                .statusCode(204);
     }
 }

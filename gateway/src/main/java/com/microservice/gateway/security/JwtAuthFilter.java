@@ -1,24 +1,18 @@
 package com.microservice.gateway.security;
 
 import io.jsonwebtoken.Claims;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
 public class JwtAuthFilter implements WebFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
     private final JwtValidator jwtValidator;
 
     public JwtAuthFilter(JwtValidator jwtValidator) {
@@ -26,63 +20,53 @@ public class JwtAuthFilter implements WebFilter {
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
 
-        // ✅ Libera swagger e api-docs
-        if (path.startsWith("/v3/api-docs") ||
-                path.startsWith("/swagger-ui") ||
-                path.contains("/api-docs") ||
-                path.contains("/swagger-ui")) {
+        // Permitir rotas públicas
+        if (isPublicPath(path)) {
+            log.debug("🟢 Rota pública detectada: {}", path);
             return chain.filter(exchange);
         }
 
-        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-
-        // Se não houver token, apenas continue. As regras de segurança decidirão se é público ou não.
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return chain.filter(exchange);
+        String token = extractToken(exchange);
+        if (token == null) {
+            log.warn("⚠ Requisição sem token JWT para {}", path);
+            return handleUnauthorized(exchange);
         }
-
-        String token = authHeader.substring(7);
 
         try {
             Claims claims = jwtValidator.parse(token);
-
-            // Guarda os claims no exchange (útil para logs ou auditoria)
             exchange.getAttributes().put("jwtClaims", claims);
-
-            // Recupera dados principais do token
-            String username = claims.getSubject();
-            Object roleClaim = claims.get("role");
-
-            // Monta as autoridades conforme o formato do claim (string ou lista)
-            List<SimpleGrantedAuthority> authorities;
-            if (roleClaim instanceof String roleStr) {
-                authorities = List.of(new SimpleGrantedAuthority(roleStr));
-            } else if (roleClaim instanceof List<?> roleList) {
-                authorities = roleList.stream()
-                        .map(Object::toString)
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-            } else {
-                authorities = Collections.emptyList();
-            }
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    username,
-                    null,
-                    authorities
-            );
-
-            // Injeta o contexto de autenticação no fluxo reativo
-            return chain.filter(exchange)
-                    .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
-
+            log.debug(" JWT válido para usuário: {}", claims.getSubject());
+            return chain.filter(exchange);
         } catch (Exception e) {
-            // Token inválido, expirado ou assinatura incorreta
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            log.warn(" Falha ao validar token JWT em {}: {}", path, e.getMessage());
+            return handleUnauthorized(exchange);
         }
+    }
+
+    private boolean isPublicPath(String path) {
+        String normalized = path.toLowerCase().replaceAll("/+$", "");
+        return normalized.startsWith("/v3/api-docs")
+                || normalized.startsWith("/swagger-ui")
+                || normalized.equals("/api/accounts/login")
+                || normalized.equals("/api/accounts/register")
+                || normalized.startsWith("/actuator")
+                || normalized.startsWith("/fallback");
+    }
+
+    private String extractToken(ServerWebExchange exchange) {
+        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        return authHeader.substring(7);
+    }
+
+    private Mono<Void> handleUnauthorized(ServerWebExchange exchange) {
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+        return exchange.getResponse().setComplete();
     }
 }

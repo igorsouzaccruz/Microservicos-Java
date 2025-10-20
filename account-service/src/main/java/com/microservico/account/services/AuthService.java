@@ -1,7 +1,7 @@
 package com.microservico.account.services;
 
-import com.microservico.account.exceptions.EmailAlreadyExistsException; // <-- MELHORIA
-import com.microservico.account.exceptions.InvalidCredentialsException; // <-- MELHORIA
+import com.microservico.account.exceptions.EmailAlreadyExistsException;
+import com.microservico.account.exceptions.InvalidCredentialsException;
 import com.microservico.account.models.Account;
 import com.microservico.account.models.UserRole;
 import com.microservico.account.models.dto.LoginDTO;
@@ -11,7 +11,7 @@ import com.microservico.account.models.mapper.AccountMapper;
 import com.microservico.account.repositories.UserRoleRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // <-- MELHORIA
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {

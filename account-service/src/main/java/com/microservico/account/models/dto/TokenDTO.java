@@ -1,3 +1,6 @@
 package com.microservico.account.models.dto;
 
-public record TokenDTO(String access_token) {}
+import java.io.Serializable;
+
+public record TokenDTO(String access_token) implements Serializable {
+}

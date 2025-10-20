@@ -2,7 +2,6 @@ package com.microservico.account.services;
 
 import com.microservico.account.models.Account;
 import com.microservico.account.models.UserRole;
-import com.microservico.account.models.enums.Role;
 import com.microservico.account.repositories.AccountRepository;
 import com.microservico.account.repositories.UserRoleRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.List; // <-- Importação necessária
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

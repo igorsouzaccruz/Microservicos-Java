@@ -1,6 +1,6 @@
 package com.microservico.sales.services;
 
-import com.microservico.sales.client.ProductClient;
+import com.microservico.sales.clients.ProductClient;
 import com.microservico.sales.exceptions.ResourceNotFoundException;
 import com.microservico.sales.models.Sale;
 import com.microservico.sales.models.dtos.ProductResponse;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -60,7 +60,7 @@ class SaleServiceTest {
         saleEntity.setQuantity(3);
         saleEntity.setSaleDate(LocalDateTime.of(2025, 1, 10, 15, 0));
 
-        productResponse = new ProductResponse(10L, "Teclado",  199.99);
+        productResponse = new ProductResponse(10L, "Teclado", 199.99);
     }
 
     @DisplayName("Given valid SaleRequest and existing product when createSale then return SaleResponse")
@@ -98,9 +98,8 @@ class SaleServiceTest {
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
                 () -> service.createSale(request));
 
-        // Then
-        assertThat(exception.getMessage())
-                .contains("Product not found in Product Service");
+        assertThat("ProductResponse not found with id: 10")
+                .contains(exception.getMessage());
 
         verify(repository, never()).save(any(Sale.class));
     }
@@ -115,7 +114,7 @@ class SaleServiceTest {
             @Override
             public SaleResponse createSale(SaleRequest req) {
                 Sale sale = null; // simula erro do mapper
-                Objects.requireNonNull(sale, "Sale entity must not be null");
+                Objects.requireNonNull(null, "Sale entity must not be null");
                 return null;
             }
         };

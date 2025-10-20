@@ -10,7 +10,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.lang.annotation.Annotation;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(
         classes = WebClientConfig.class,

@@ -1,16 +1,22 @@
 package com.microservico.account.controllers;
 
+import com.microservico.account.controllers.interfaces.IAccountControllerDocs;
 import com.microservico.account.models.dto.LoginDTO;
 import com.microservico.account.models.dto.RegisterDTO;
+import com.microservico.account.models.dto.RegisterResponseDTO;
+import com.microservico.account.models.dto.TokenDTO;
 import com.microservico.account.services.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AccountController {
+@RequestMapping("/accounts")
+public class AccountController implements IAccountControllerDocs {
 
     private final AuthService authService;
 
@@ -19,14 +25,16 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Validated RegisterDTO dto) {
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody @Validated RegisterDTO dto) {
         authService.register(dto);
-        return ResponseEntity.status(201).body(Map.of("message", "Usuário registrado com sucesso"));
+        var response = new RegisterResponseDTO("Usuário registrado com sucesso");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Validated LoginDTO dto) {
+    public ResponseEntity<TokenDTO> login(@RequestBody @Validated LoginDTO dto) {
         String token = authService.login(dto);
-        return ResponseEntity.ok(Map.of("access_token", token));
+        var tokenDto = new TokenDTO(token);
+        return ResponseEntity.ok(tokenDto);
     }
 }

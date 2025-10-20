@@ -66,9 +66,9 @@ class ProductRepositoryTest {
         // Then / Assert
         assertNotNull(updatedSaved,
                 () -> "Should have a updated product");
-        assertEquals(productSaved.getPrice(), new BigDecimal("99.0"));
-        assertEquals(productSaved.getDescription(), "New Description");
-        assertEquals(productSaved.getCategory(), CategoryEnum.COMPUTERS);
+        assertEquals(new BigDecimal("99.0"), productSaved.getPrice());
+        assertEquals("New Description", productSaved.getDescription());
+        assertEquals(CategoryEnum.COMPUTERS, productSaved.getCategory());
     }
 
     @DisplayName("Given Product List When FindAll Then Return Product List")

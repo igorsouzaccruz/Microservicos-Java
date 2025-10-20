@@ -1,6 +1,6 @@
 package com.microservico.sales.controllers;
 
-import com.microservico.sales.controllers.interfaces.ISaleController;
+import com.microservico.sales.controllers.interfaces.ISaleControllerDocs;
 import com.microservico.sales.models.dtos.SaleRequest;
 import com.microservico.sales.models.dtos.SaleResponse;
 import com.microservico.sales.services.SaleService;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/sales")
-public class SaleController implements ISaleController {
+public class SaleController implements ISaleControllerDocs {
     private final SaleService service;
 
     public SaleController(SaleService service) {

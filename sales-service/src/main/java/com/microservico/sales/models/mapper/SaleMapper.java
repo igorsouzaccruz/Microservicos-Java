@@ -5,7 +5,6 @@ import com.microservico.sales.models.dtos.SaleRequest;
 import com.microservico.sales.models.dtos.SaleResponse;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Component
