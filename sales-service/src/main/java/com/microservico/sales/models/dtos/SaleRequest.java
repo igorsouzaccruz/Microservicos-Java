@@ -14,18 +14,15 @@ public class SaleRequest {
     @NotNull
     private Integer quantity;
 
-    // 🧩 Construtor padrão (necessário para desserialização JSON)
     public SaleRequest() {
     }
 
-    // 🏗️ Construtor completo (útil em testes e criação manual)
     public SaleRequest(Long productId, Long userId, Integer quantity) {
         this.productId = productId;
         this.userId = userId;
         this.quantity = quantity;
     }
 
-    // 🔹 Getters e Setters
     public Long getProductId() {
         return productId;
     }

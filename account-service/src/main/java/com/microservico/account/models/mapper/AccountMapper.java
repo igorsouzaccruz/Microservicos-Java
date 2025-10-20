@@ -2,19 +2,22 @@ package com.microservico.account.models.mapper;
 
 import com.microservico.account.models.Account;
 import com.microservico.account.models.dto.RegisterDTO;
+import org.springframework.stereotype.Component; // <-- MELHORIA: Torna um Bean do Spring
 
 import java.util.Objects;
 
+@Component
 public class AccountMapper {
-    public Account toEntity(RegisterDTO dto, String encodedPassword) {
+
+    public Account toEntity(RegisterDTO dto) {
         if (Objects.isNull(dto)) {
             return null;
         }
 
-        Account account = new Account();
-        account.setEmail(dto.email());
-        account.setPassword(encodedPassword);
-        account.setAddress(dto.address());
-        return account;
+        return new Account(
+                dto.email(),
+                null,
+                dto.address()
+        );
     }
 }

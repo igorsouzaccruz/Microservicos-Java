@@ -23,33 +23,45 @@ public class Sale implements Serializable {
     @NotNull
     @Positive
     private Long productId;
+
     @NotNull
     @Positive
     private Long userId;
-    private Boolean ativo;
+
     @NotNull
     @Positive
     private Integer quantity;
+
+    private Boolean ativo;
+
     private LocalDateTime saleDate;
 
     public Sale() {
+        this.ativo = true;
+        this.saleDate = LocalDateTime.now();
     }
 
-    public Sale(Long id, Long productId, Long userId, Boolean ativo, Integer quantity, LocalDateTime saleDate) {
+    public Sale(Long id, Long productId, Long userId, Integer quantity) {
         this.id = id;
         this.productId = productId;
         this.userId = userId;
-        this.ativo = ativo;
         this.quantity = quantity;
-        this.saleDate = saleDate;
+        this.ativo = true;
+        this.saleDate = LocalDateTime.now();
     }
 
-    public Sale(Long productId, Long userId, Boolean ativo, Integer quantity, LocalDateTime saleDate) {
+    public Sale(Long productId, Long userId, Integer quantity) {
         this.productId = productId;
         this.userId = userId;
-        this.ativo = ativo;
         this.quantity = quantity;
-        this.saleDate = saleDate;
+        this.ativo = true;
+        this.saleDate = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.ativo == null) this.ativo = true;
+        if (this.saleDate == null) this.saleDate = LocalDateTime.now();
     }
 
     public Long getId() {

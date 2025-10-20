@@ -17,7 +17,6 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-
     @Value("${jwt.private-key-path}")
     private Resource privateKeyResource;
 
@@ -28,20 +27,16 @@ public class JwtService {
 
 
         try (InputStream inputStream = privateKeyResource.getInputStream()) {
-            System.out.println("📁 Tentando carregar chave privada de: " + privateKeyResource);
-            // 1. Leia os bytes do *stream*
+
             byte[] keyBytes = inputStream.readAllBytes();
 
-            // 2. Converta os bytes para String
             String pem = new String(keyBytes, StandardCharsets.UTF_8)
                     .replace("-----BEGIN PRIVATE KEY-----", "")
                     .replace("-----END PRIVATE KEY-----", "")
                     .replaceAll("\\s+", "");
 
-            // 3. Decodifique o Base64
             var decodedKeyBytes = Base64.getDecoder().decode(pem);
 
-            // 4. Gere a chave
             var keySpec = new PKCS8EncodedKeySpec(decodedKeyBytes);
             return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
 

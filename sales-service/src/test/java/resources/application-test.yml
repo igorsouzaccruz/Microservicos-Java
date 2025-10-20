@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: sales-service
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: none
+
+  datasource:
+    url: jdbc:h2:mem:salesdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+# Evita registrar no Eureka
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+logging:
+  level:
+    root: WARN

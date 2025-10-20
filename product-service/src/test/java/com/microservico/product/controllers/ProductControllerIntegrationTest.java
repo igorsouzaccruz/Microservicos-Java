@@ -42,7 +42,7 @@ public class ProductControllerIntegrationTest {
         }
 
         specification = new RequestSpecBuilder()
-                .setBasePath("/api/products")
+                .setBasePath("/products")
                 .setPort(port)
                     .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                     .addFilter(new ResponseLoggingFilter(LogDetail.ALL))

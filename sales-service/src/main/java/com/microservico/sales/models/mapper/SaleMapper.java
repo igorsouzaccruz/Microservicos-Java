@@ -26,9 +26,7 @@ public class SaleMapper {
             sale.setUserId(request.getUserId());
         }
 
-        sale.setAtivo(true);
         sale.setQuantity(request.getQuantity());
-        sale.setSaleDate(LocalDateTime.now());
         return sale;
     }
 
