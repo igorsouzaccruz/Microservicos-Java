@@ -50,7 +50,8 @@ Esses serviços se comunicam dinamicamente via **Spring Cloud Eureka**, e o trá
 
 ### Local para Imagem Visual
 ```markdown
-![Arquitetura dos Microserviços](microservicos.png)
+![Arquitetura dos Microserviços](https://github.com/igorsouzaccruz/Microservicos-Java/blob/main/microservicos.png?raw=true)
+
 ```
 
 ---
@@ -101,8 +102,103 @@ Esses serviços se comunicam dinamicamente via **Spring Cloud Eureka**, e o trá
 └── README.md
 ```
 
+## 4. Como Executar o Projeto
 
-## 4. Dependências e Configuração de Cada Serviço
+### Localmente com Maven
+```bash
+# 1. Subir o Eureka Server
+cd eureka-server
+mvn spring-boot:run
+
+# 2. Subir o Gateway
+cd ../gateway
+mvn spring-boot:run
+
+# 3. Subir os microserviços
+cd ../account-service && mvn spring-boot:run
+cd ../product-service && mvn spring-boot:run
+cd ../sales-service && mvn spring-boot:run
+```
+
+### Via Docker Compose
+```bash
+docker-compose up -d --build
+```
+**Serviços disponíveis:**
+- Gateway: [http://localhost:8080](http://localhost:8080)
+- Eureka Server: [http://localhost:8761](http://localhost:8761)
+- Swagger: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+Para parar:
+```bash
+docker-compose down
+```
+
+---
+
+## 5. Endpoints e Exemplos
+
+### Account Service
+| Método | Endpoint | Descrição |
+|---------|-----------|-----------|
+| POST | `/api/accounts/register` | Cadastra novo usuário |
+| POST | `/api/accounts/login` | Autentica e retorna JWT |
+
+
+**Register**
+```bash
+curl -X POST http://localhost:8080/api/accounts/register -H "Content-Type: application/json"   -d '{
+  "email": "igors2@teste.com",
+  "password": "123456",
+  "address": "Rua Exemplo, 123 - Fortaleza, CE",
+  "admin": true
+}'
+```
+**Resposta**
+```json
+{
+    "message": "Usuário registrado com sucesso"
+}
+```
+---
+**Login**
+```bash
+curl -X POST http://localhost:8080/api/accounts/login   -H "Content-Type: application/json"   -d '{"email":"user@example.com","password":"123456"}'
+```
+**Resposta**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQwMDAwMDAwLCJleHAiOjE3NDAwMzYwMDB9.DyP0RUTR-J4TjF8x5Xpr9HfK1hLPOyCqDkz2_sF8mDE"
+}
+```
+
+### Product Service
+| Método | Endpoint | Descrição |
+|---------|-----------|-----------|
+| GET | `/api/products` | Lista todos os produtos |
+| POST | `/api/products` | Cadastra produto |
+| PUT | `/api/products/{id}` | Atualiza produto |
+| DELETE | `/api/products/{id}` | Exclui produto |
+
+### Sales Service
+| Método | Endpoint | Descrição |
+|---------|-----------|-----------|
+| GET | `/api/sales/user/{id}` | Vendas por usuário |
+| POST | `/api/sales` | Registra nova venda |
+
+---
+
+## 6. Testes Automatizados
+
+**Frameworks:** JUnit 5, Mockito  
+**Execução:**
+```bash
+mvn test
+```
+---
+
+
+## 7. Dependências e Configuração de Cada Serviço
 
 ### Account Service
 **Responsabilidade:** autenticação e registro de usuários.  
@@ -334,101 +430,6 @@ logging:
 
 ```
 
----
-
-## 5. Como Executar o Projeto
-
-### Localmente com Maven
-```bash
-# 1. Subir o Eureka Server
-cd eureka-server
-mvn spring-boot:run
-
-# 2. Subir o Gateway
-cd ../gateway
-mvn spring-boot:run
-
-# 3. Subir os microserviços
-cd ../account-service && mvn spring-boot:run
-cd ../product-service && mvn spring-boot:run
-cd ../sales-service && mvn spring-boot:run
-```
-
-### Via Docker Compose
-```bash
-docker-compose up -d --build
-```
-**Serviços disponíveis:**
-- Gateway: [http://localhost:8080](http://localhost:8080)
-- Eureka Server: [http://localhost:8761](http://localhost:8761)
-- Swagger: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-
-Para parar:
-```bash
-docker-compose down
-```
-
----
-
-## 6. Endpoints e Exemplos
-
-### Account Service
-| Método | Endpoint | Descrição |
-|---------|-----------|-----------|
-| POST | `/api/accounts/register` | Cadastra novo usuário |
-| POST | `/api/accounts/login` | Autentica e retorna JWT |
-
-
-**Register**
-```bash
-curl -X POST http://localhost:8080/api/accounts/register -H "Content-Type: application/json"   -d '{
-  "email": "igors2@teste.com",
-  "password": "123456",
-  "address": "Rua Exemplo, 123 - Fortaleza, CE",
-  "admin": true
-}'
-```
-**Resposta**
-```json
-{
-    "message": "Usuário registrado com sucesso"
-}
-```
----
-**Login**
-```bash
-curl -X POST http://localhost:8080/api/accounts/login   -H "Content-Type: application/json"   -d '{"email":"user@example.com","password":"123456"}'
-```
-**Resposta**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQwMDAwMDAwLCJleHAiOjE3NDAwMzYwMDB9.DyP0RUTR-J4TjF8x5Xpr9HfK1hLPOyCqDkz2_sF8mDE"
-}
-```
-
-### Product Service
-| Método | Endpoint | Descrição |
-|---------|-----------|-----------|
-| GET | `/api/products` | Lista todos os produtos |
-| POST | `/api/products` | Cadastra produto |
-| PUT | `/api/products/{id}` | Atualiza produto |
-| DELETE | `/api/products/{id}` | Exclui produto |
-
-### Sales Service
-| Método | Endpoint | Descrição |
-|---------|-----------|-----------|
-| GET | `/api/sales/user/{id}` | Vendas por usuário |
-| POST | `/api/sales` | Registra nova venda |
-
----
-
-## 7. Testes Automatizados
-
-**Frameworks:** JUnit 5, Mockito  
-**Execução:**
-```bash
-mvn test
-```
 ---
 
 ## 8. Próximos passos
