@@ -127,7 +127,7 @@ docker-compose up -d --build
 **Serviços disponíveis:**
 - Gateway: [http://localhost:8080](http://localhost:8080)
 - Eureka Server: [http://localhost:8761](http://localhost:8761)
-- Swagger: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- Swagger: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) (need fix)
 
 Para parar:
 ```bash
