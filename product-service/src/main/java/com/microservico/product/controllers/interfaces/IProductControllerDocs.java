@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -38,12 +37,10 @@ public interface IProductControllerDocs {
             summary = "Buscar produto por ID",
             description = "Retorna um único produto com base no seu ID."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Produto encontrado",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
-    })
+    @ApiResponse(responseCode = "200", description = "Produto encontrado",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ProductDTO.class)))
+    @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
     @GetMapping("/{id}")
     ProductDTO findById(
             @Parameter(description = "ID do produto a ser buscado", required = true, example = "1")
@@ -54,12 +51,12 @@ public interface IProductControllerDocs {
             summary = "Criar um novo produto",
             description = "Cria um novo produto e retorna os dados do produto criado."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content)
-    })
+
+    @ApiResponse(responseCode = "201", description = "Produto criado com sucesso",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ProductDTO.class)))
+    @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content)
+
     @PostMapping
     @ResponseStatus(code = org.springframework.http.HttpStatus.CREATED)
     ProductDTO create(
@@ -71,13 +68,11 @@ public interface IProductControllerDocs {
             summary = "Atualizar um produto existente",
             description = "Atualiza os dados de um produto existente com base no seu ID."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content)
-    })
+    @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ProductDTO.class)))
+    @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content)
     @PutMapping("/{id}")
     ProductDTO update(
             @Parameter(description = "ID do produto a ser atualizado", required = true, example = "1")
@@ -91,10 +86,8 @@ public interface IProductControllerDocs {
             summary = "Deletar um produto",
             description = "Exclui um produto com base no seu ID."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Produto excluído com sucesso", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
-    })
+    @ApiResponse(responseCode = "204", description = "Produto excluído com sucesso", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
     @DeleteMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.NO_CONTENT)
     void delete(

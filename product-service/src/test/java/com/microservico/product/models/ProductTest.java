@@ -66,14 +66,14 @@ class ProductTest {
         product.setDescription("   ");
         violations = validator.validate(product);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("description");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("description");
 
         //(@Length)
         String longDescription = "a".repeat(151);
         product.setDescription(longDescription);
         violations = validator.validate(product);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("description");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("description");
     }
 
     @DisplayName("Should not be valid when category is null")
@@ -90,7 +90,7 @@ class ProductTest {
 
         // Assert
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("category");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("category");
     }
 
     @DisplayName("Should not be performed when the price is invalid")
@@ -105,18 +105,18 @@ class ProductTest {
         product.setPrice(null);
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("price");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("price");
 
         //(@Positive)
         product.setPrice(BigDecimal.ZERO);
         violations = validator.validate(product);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("price");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("price");
 
         //(@Positive)
         product.setPrice(new BigDecimal("-0.01"));
         violations = validator.validate(product);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("price");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("price");
     }
 }

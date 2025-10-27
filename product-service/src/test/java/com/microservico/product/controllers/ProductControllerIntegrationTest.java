@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductControllerIntegrationTest {
+class ProductControllerIntegrationTest {
 
     private static ObjectMapper objectMapper;
     private static ProductDTO productDTO;
@@ -34,7 +34,7 @@ public class ProductControllerIntegrationTest {
     private RequestSpecification specification;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         if (objectMapper == null) {
             objectMapper = new ObjectMapper();

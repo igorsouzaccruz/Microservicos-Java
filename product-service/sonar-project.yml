@@ -1,0 +1,26 @@
+sonar.projectKey: product-service
+sonar.projectName: Product Service
+sonar.projectVersion: "1.0"
+
+sonar.host.url: http://localhost:9000
+sonar.token: ${env.SONAR_TOKEN}
+
+# Código e testes
+sonar.sources: src/main/java
+sonar.tests: src/test/java
+sonar.java.binaries: target/classes
+sonar.sourceEncoding: UTF-8
+
+# Cobertura de Testes
+sonar.coverage.jacoco.xmlReportPaths: target/site/jacoco/jacoco.xml
+
+# Exclusões recomendadas
+# sonar.exclusions: |
+#   **/dto/**
+#   **/config/**
+#   **/model/**
+#   **/exceptions/**
+#   **/generated/**
+
+# Considerar somente testes com padrão Test
+sonar.test.inclusions: "**/*Test.java"

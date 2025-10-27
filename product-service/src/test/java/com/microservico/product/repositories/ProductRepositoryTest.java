@@ -25,7 +25,7 @@ class ProductRepositoryTest {
     private Product product0;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         product0 = new Product(
                 null,
                 "Some product",
