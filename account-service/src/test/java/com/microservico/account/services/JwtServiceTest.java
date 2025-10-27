@@ -18,8 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -88,7 +89,11 @@ class JwtServiceTest {
 
         // Act
         String token1 = jwtService.generateToken(1L, "user@test.com", "USER");
-        Thread.sleep(1000);
+
+        await().atMost(Duration.ofSeconds(2))
+                .pollDelay(Duration.ofSeconds(1))
+                .until(() -> true);
+
         String token2 = jwtService.generateToken(1L, "user@test.com", "USER");
 
         // Assert

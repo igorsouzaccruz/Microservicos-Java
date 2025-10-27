@@ -24,7 +24,7 @@ class AccountServiceTest {
     @InjectMocks
     private AccountService accountService;
 
-    private Account account; // Objeto de teste reutilizável
+    private Account account;
 
     @BeforeEach
     void setUp() {
@@ -59,8 +59,7 @@ class AccountServiceTest {
         Optional<Account> foundAccount = accountService.findByEmail(email);
 
         // Assert
-        assertThat(foundAccount).isPresent();
-        assertThat(foundAccount.get()).isEqualTo(account);
+        assertThat(foundAccount).isPresent().contains(account);
         verify(repository, times(1)).findByEmail(email);
     }
 

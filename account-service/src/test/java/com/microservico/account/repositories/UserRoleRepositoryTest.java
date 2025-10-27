@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class UserRoleRepositoryTest {
+class UserRoleRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
