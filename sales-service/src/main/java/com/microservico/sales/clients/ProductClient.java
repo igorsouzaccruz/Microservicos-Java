@@ -1,5 +1,6 @@
 package com.microservico.sales.clients;
 
+import com.microservico.sales.exceptions.ProductServiceCommunicationException;
 import com.microservico.sales.exceptions.ResourceNotFoundException;
 import com.microservico.sales.models.dtos.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class ProductClient {
         } catch (WebClientResponseException.NotFound ex) {
             throw new ResourceNotFoundException(id, ProductResponse.class.getSimpleName());
         } catch (Exception e) {
-            throw new RuntimeException("Error communicating with Product Service.", e);
+            throw new ProductServiceCommunicationException("Failed to communicate with Product Service", e);
         }
     }
 }

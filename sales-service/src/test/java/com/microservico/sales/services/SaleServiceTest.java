@@ -98,8 +98,8 @@ class SaleServiceTest {
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
                 () -> service.createSale(request));
 
-        assertThat("ProductResponse not found with id: 10")
-                .contains(exception.getMessage());
+        assertThat(exception.getMessage())
+                .contains("ProductResponse not found with id: 10");
 
         verify(repository, never()).save(any(Sale.class));
     }
@@ -114,7 +114,7 @@ class SaleServiceTest {
             @Override
             public SaleResponse createSale(SaleRequest req) {
                 Sale sale = null; // simula erro do mapper
-                Objects.requireNonNull(null, "Sale entity must not be null");
+                Objects.requireNonNull(sale, "Sale entity must not be null");
                 return null;
             }
         };
@@ -154,8 +154,7 @@ class SaleServiceTest {
         List<SaleResponse> responses = service.listByUser(5L);
 
         // Then
-        assertThat(responses).isNotEmpty();
-        assertThat(responses).hasSize(1);
+        assertThat(responses).isNotEmpty().hasSize(1);
         assertThat(responses.getFirst().userId()).isEqualTo(5L);
         assertThat(responses.getFirst().productId()).isEqualTo(10L);
 

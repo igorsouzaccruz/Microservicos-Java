@@ -3,13 +3,14 @@ package com.microservico.sales.models.mapper;
 import com.microservico.sales.models.Sale;
 import com.microservico.sales.models.dtos.SaleRequest;
 import com.microservico.sales.models.dtos.SaleResponse;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
-public class SaleMapper {
+public final class SaleMapper {
 
+    private SaleMapper() {
+        throw new UnsupportedOperationException("Utility class - cannot be instantiated");
+    }
 
     public static Sale toEntity(SaleRequest request) {
         if (Objects.isNull(request))

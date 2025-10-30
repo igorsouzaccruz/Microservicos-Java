@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Validated
 @Service
@@ -24,12 +23,10 @@ public class SaleService {
     private final SaleRepository repository;
     private final ProductClient productClient;
 
-
     public SaleService(SaleRepository repository, ProductClient productClient) {
         this.repository = repository;
         this.productClient = productClient;
     }
-
 
     public SaleResponse createSale(@Valid @NotNull SaleRequest saleRequest) {
         ProductResponse product = productClient.getProductById(saleRequest.getProductId());
@@ -49,6 +46,6 @@ public class SaleService {
         return repository.findByUserId(userId)
                 .stream()
                 .map(SaleMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

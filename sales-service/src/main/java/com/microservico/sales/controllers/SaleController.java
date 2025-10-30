@@ -27,9 +27,7 @@ public class SaleController implements ISaleControllerDocs {
             @Valid @RequestBody SaleRequest request,
             @NotNull @Positive @RequestHeader(value = "X-User-Id", required = true) String userIdHeader
     ) {
-        if (userIdHeader != null) {
-            request.setUserId(Long.parseLong(userIdHeader));
-        }
+        request.setUserId(Long.parseLong(userIdHeader));
         return service.createSale(request);
     }
 

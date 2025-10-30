@@ -19,13 +19,13 @@ public class AuthService {
     private final UserRoleRepository roleRepository;
     private final JwtService jwtService;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final AccountMapper accountMapper; // <-- MELHORIA
+    private final AccountMapper accountMapper; 
 
     public AuthService(AccountService accountService,
                        UserRoleRepository roleRepository,
                        JwtService jwtService,
                        BCryptPasswordEncoder passwordEncoder,
-                       AccountMapper accountMapper) { // <-- MELHORIA
+                       AccountMapper accountMapper) { 
         this.accountService = accountService;
         this.roleRepository = roleRepository;
         this.jwtService = jwtService;
@@ -62,7 +62,7 @@ public class AuthService {
 
         Role role = roleRepository.findByAccountId(acc.getId())
                 .map(UserRole::getRole)
-                .orElseThrow(() -> new IllegalStateException( // <-- MELHORIA
+                .orElseThrow(() -> new IllegalStateException( 
                         "Erro de integridade: Usuário " + acc.getId() + " não possui role."
                 ));
 

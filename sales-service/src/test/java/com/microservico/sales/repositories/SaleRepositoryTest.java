@@ -25,6 +25,7 @@ class SaleRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        repository.deleteAll();
         sale0 = new Sale();
         sale0.setProductId(100L);
         sale0.setUserId(10L);

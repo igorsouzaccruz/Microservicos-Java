@@ -55,7 +55,7 @@ class SaleTest {
 
         Set<ConstraintViolation<Sale>> violations = validator.validate(sale);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("productId");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("productId");
 
         sale.setProductId(-10L);
         violations = validator.validate(sale);
@@ -72,7 +72,7 @@ class SaleTest {
 
         Set<ConstraintViolation<Sale>> violations = validator.validate(sale);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("userId");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("userId");
 
         sale.setUserId(-5L);
         violations = validator.validate(sale);
@@ -89,7 +89,7 @@ class SaleTest {
 
         Set<ConstraintViolation<Sale>> violations = validator.validate(sale);
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo("quantity");
+        assertThat(violations.iterator().next().getPropertyPath().toString()).hasToString("quantity");
 
         sale.setQuantity(0);
         violations = validator.validate(sale);
@@ -146,7 +146,7 @@ class SaleTest {
         sale3.setId(2L);
 
         assertThat(sale1).isEqualTo(sale2);
-        assertThat(sale1.hashCode()).isEqualTo(sale2.hashCode());
+        assertThat(sale1.hashCode()).hasSameHashCodeAs(sale2.hashCode());
         assertThat(sale1).isNotEqualTo(sale3);
     }
 
