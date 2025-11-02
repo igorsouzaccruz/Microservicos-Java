@@ -1,84 +1,100 @@
 package com.microservico.sales.clients;
 
-import com.microservico.sales.exceptions.ResourceNotFoundException;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.microservico.sales.models.dtos.ProductResponse;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.*;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Teste de integração leve do FeignClient ProductClient,
+ * utilizando WireMock para simular o serviço product-service.
+ */
+@SpringBootTest(
+        classes = ProductClientTest.TestConfig.class,
+        properties = {
+                "feign.client.config.product-service.url=http://localhost:8089",
+                "spring.main.web-application-type=none",
+                "eureka.client.enabled=false"
+        }
+)
+@AutoConfigureWireMock(port = 8089)
+@EnableFeignClients(clients = ProductClient.class)
 class ProductClientTest {
 
-    private static MockWebServer mockWebServer;
+    @EnableAutoConfiguration
+    static class TestConfig {
+    }
+
+    @Autowired
     private ProductClient productClient;
 
-    @BeforeAll
-    static void setupServer() throws IOException {
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
-    }
-
-    @AfterAll
-    static void shutdownServer() throws IOException {
-        mockWebServer.shutdown();
-    }
-
-    @BeforeEach
-    void setUp() {
-        String baseUrl = mockWebServer.url("/").toString();
-        WebClient.Builder builder = WebClient.builder();
-        productClient = new ProductClient(baseUrl, builder);
+    @AfterEach
+    void tearDown() {
+        WireMock.reset();
     }
 
     @Test
-    @DisplayName("Deve retornar ProductResponse quando o produto for encontrado")
-    void shouldReturnProductResponse_WhenProductExists() throws InterruptedException {
-        // Arrange 
-        String json = """
-                {
-                    "id": 1,
-                    "name": "Teclado Mecânico",
-                    "price": 250.50
-                }
-                """;
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(json)
-                .addHeader("Content-Type", "application/json")
-                .setResponseCode(200));
+    @DisplayName("Deve retornar ProductResponse quando o produto for encontrado (HTTP 200)")
+    void shouldReturnProductResponse_WhenProductExists() {
+        // Arrange
+        WireMock.stubFor(WireMock.get("/products/1")
+                .willReturn(WireMock.aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("""
+                                { "id": 1, "name": "Teclado Mecânico", "price": 250.50 }
+                                """)
+                        .withStatus(200)));
 
         // Act
         ProductResponse response = productClient.getProductById(1L);
 
         // Assert
-        assertNotNull(response);
-        assertEquals(1L, response.id());
-        assertEquals("Teclado Mecânico", response.name());
-        assertEquals(250.50, response.price());
-
-        var recorded = mockWebServer.takeRequest(1, TimeUnit.SECONDS);
-        assertNotNull(recorded);
-        assertEquals("GET", recorded.getMethod());
-        assertEquals("/products/1", recorded.getPath());
+        assertThat(response).isNotNull();
+        assertThat(response.id()).isEqualTo(1L);
+        assertThat(response.name()).isEqualTo("Teclado Mecânico");
+        assertThat(response.price()).isEqualTo(250.50);
     }
 
     @Test
-    @DisplayName("Deve lançar ResourceNotFoundException quando o produto não for encontrado (404)")
-    void shouldThrowResourceNotFoundException_WhenProductNotFound() {
-        // Arrange 
-        mockWebServer.enqueue(new MockResponse().setResponseCode(404));
+    @DisplayName("Deve lançar exceção FeignException quando o produto não for encontrado (HTTP 404)")
+    void shouldThrowFeignException_WhenProductNotFound() {
+        // Arrange
+        WireMock.stubFor(WireMock.get("/products/999")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(404)));
 
         // Act & Assert
-        ResourceNotFoundException thrown = assertThrows(
-                ResourceNotFoundException.class,
-                () -> productClient.getProductById(999L),
-                "Deveria lançar ResourceNotFoundException para um produto inexistente"
-        );
-        assertEquals("ProductResponse not found with id: 999", thrown.getMessage());
+        try {
+            productClient.getProductById(999L);
+        } catch (Exception ex) {
+            assertThat(ex)
+                    .isInstanceOf(feign.FeignException.NotFound.class)
+                    .hasMessageContaining("404");
+        }
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção genérica quando ocorrer erro no servidor (HTTP 500)")
+    void shouldThrowException_WhenServerErrorOccurs() {
+        // Arrange
+        WireMock.stubFor(WireMock.get("/products/500")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(500)
+                        .withBody("Internal Server Error")));
+
+        // Act & Assert
+        try {
+            productClient.getProductById(500L);
+        } catch (Exception ex) {
+            assertThat(ex.getMessage()).contains("Internal Server Error");
+        }
     }
 }

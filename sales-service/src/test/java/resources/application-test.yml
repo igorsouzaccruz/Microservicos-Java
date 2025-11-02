@@ -15,6 +15,12 @@ spring:
       ddl-auto: create-drop
     show-sql: false
 
+feign:
+  client:
+    config:
+      product-service:
+        url: http://localhost:8089
+
 # Evita registrar no Eureka
 eureka:
   client:
