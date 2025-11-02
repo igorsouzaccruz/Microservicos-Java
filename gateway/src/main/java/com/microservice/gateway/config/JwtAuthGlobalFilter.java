@@ -1,4 +1,5 @@
 package com.microservice.gateway.config;
+
 import com.microservice.gateway.security.JwtValidator;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;

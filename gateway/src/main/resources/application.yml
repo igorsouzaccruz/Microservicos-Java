@@ -27,7 +27,8 @@ eureka:
     lease-expiration-duration-in-seconds: 30
 
 jwt:
-  public-key-path: ${JWT_PUBLIC_KEY_PATH:file:/app/keys/public.pem}
+  #  public-key-path: ${JWT_PUBLIC_KEY_PATH:file:/app/keys/public.pem}
+  public-key-path: ${JWT_PUBLIC_KEY_PATH:classpath:keys/public.pem}
 
 logging:
   level:
@@ -42,7 +43,7 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
-    path: /swagger-ui.html  
+    path: /swagger-ui.html
     display-request-duration: true
     urls:
       - name: account-service

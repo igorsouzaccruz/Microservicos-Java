@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import reactor.test.StepVerifier;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -16,9 +17,11 @@ class GatewayRoutesConfigTest {
     @Autowired
     private RouteLocator routeLocator;
 
+    @SuppressWarnings("removal")
     @MockBean
     private JwtValidator jwtValidator;
 
+    @SuppressWarnings("removal")
     @MockBean
     private JwtAuthGlobalFilter jwtAuthGlobalFilter;
 
@@ -39,13 +42,14 @@ class GatewayRoutesConfigTest {
     }
 
     @Test
-    @DisplayName("Deve conter rota para account-service com URI correta") // NOME CORRIGIDO
+    @DisplayName("Deve conter rota para account-service com URI correta")
+        // NOME CORRIGIDO
     void testAccountServiceRouteConfig() {
         StepVerifier.create(routeLocator.getRoutes()
                         .filter(route -> route.getId().equals("account-service"))
                         .single()) // .single() garante que apenas uma rota com esse ID existe
                 .assertNext(route -> {
-                    assertThat(route.getUri().toString()).isEqualTo("lb://account-service");
+                    assertThat(route.getUri().toString()).hasToString("lb://account-service");
                     assertThat(route.getFilters()).isNotEmpty(); // Verificamos que há filtros (o rewritePath)
                 })
                 .verifyComplete();
@@ -58,19 +62,20 @@ class GatewayRoutesConfigTest {
                         .filter(route -> route.getId().equals("product-service"))
                         .single())
                 .assertNext(route ->
-                        assertThat(route.getUri().toString()).isEqualTo("lb://product-service")
+                        assertThat(route.getUri().toString()).hasToString("lb://product-service")
                 )
                 .verifyComplete();
     }
 
     @Test
-    @DisplayName("Deve conter rota para sales-service com URI correta") // NOME CORRIGIDO
+    @DisplayName("Deve conter rota para sales-service com URI correta")
+        // NOME CORRIGIDO
     void testSalesServiceRouteConfig() {
         StepVerifier.create(routeLocator.getRoutes()
                         .filter(route -> route.getId().equals("sales-service"))
                         .single())
                 .assertNext(route ->
-                        assertThat(route.getUri().toString()).isEqualTo("lb://sales-service")
+                        assertThat(route.getUri().toString()).hasToString("lb://sales-service")
                 )
                 .verifyComplete();
     }

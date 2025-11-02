@@ -116,7 +116,7 @@ class JwtAuthFilterTest {
         ServerWebExchange mutated = captor.getValue();
 
         // Claims foram adicionadas
-//        assertThat(mutated.getAttribute("jwtClaims")).isEqualTo(claims);
+        //      assertThat(mutated.getAttribute("jwtClaims")).isEqualTo(claims);
     }
 
     @Test

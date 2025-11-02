@@ -52,7 +52,7 @@ class JwtValidatorTest {
 
     @Test
     @DisplayName("Deve carregar chave pública RSA com sucesso")
-    void shouldLoadPublicKeySuccessfully() throws Exception {
+    void shouldLoadPublicKeySuccessfully() {
         PublicKey key = ReflectionTestUtils.invokeMethod(jwtValidator, "loadPublicKey");
         assertThat(key).isNotNull();
         assertThat(key.getAlgorithm()).isEqualTo("RSA");
@@ -72,7 +72,7 @@ class JwtValidatorTest {
                 IllegalStateException.class,
                 () -> ReflectionTestUtils.invokeMethod(brokenValidator, "loadPublicKey")
         );
-        assertThat(ex.getMessage()).contains("Falha ao carregar chave pública RSA");
+        assertThat(ex.getMessage()).contains("Falha inesperada ao carregar chave pública RSA.");
     }
 
     @Test

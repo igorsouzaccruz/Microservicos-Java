@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -32,23 +33,36 @@ public class JwtValidator {
         log.info("Chave pública RSA carregada com sucesso para validação de tokens");
     }
 
-    private PublicKey loadPublicKey() {
+    public PublicKey loadPublicKey() {
         try (InputStream inputStream = publicKeyResource.getInputStream()) {
-            byte[] keyBytes = inputStream.readAllBytes();
 
-            String pem = new String(keyBytes, StandardCharsets.UTF_8)
-                    .replace("-----BEGIN PUBLIC KEY-----", "")
-                    .replace("-----END PUBLIC KEY-----", "")
-                    .replaceAll("\\s+", "");
+            byte[] keyBytes = inputStream.readAllBytes();
+            String pem = sanitizePem(new String(keyBytes, StandardCharsets.UTF_8));
 
             byte[] decodedKey = Base64.getDecoder().decode(pem);
-            var keySpec = new X509EncodedKeySpec(decodedKey);
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+
             return KeyFactory.getInstance("RSA").generatePublic(keySpec);
 
+        } catch (NoSuchAlgorithmException e) {
+            log.error("Falha ao carregar chave pública RSA: algoritmo RSA não encontrado.");
+            throw new IllegalStateException("Erro interno: algoritmo RSA indisponível.", e);
+
+        } catch (IllegalArgumentException e) {
+            log.error("Falha ao carregar chave pública RSA: conteúdo PEM malformado.");
+            throw new IllegalStateException("Erro ao decodificar conteúdo da chave pública RSA.", e);
+
         } catch (Exception e) {
-            log.error(" Falha ao carregar chave pública RSA", e);
-            throw new IllegalStateException("Falha ao carregar chave pública RSA", e);
+            log.error("Falha inesperada ao carregar chave pública RSA. Verifique a origem da chave e permissões de leitura.");
+            throw new IllegalStateException("Falha inesperada ao carregar chave pública RSA.", e);
         }
+    }
+
+    private String sanitizePem(String pemContent) {
+        return pemContent
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s+", "");
     }
 
     public Claims parse(String token) {
